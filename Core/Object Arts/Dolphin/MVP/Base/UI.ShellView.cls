@@ -1141,10 +1141,7 @@ wmNcActivate: message wParam: wParam lParam: lParam
 wmNcCreate: message wParam: wParam lParam: lParam
 	"Private - Default handler for a WM_NCCREATE. "
 
-	"The [documentation](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablenonclientdpiscaling) states that it is not necessary to call EnableNonClientScaling for apps running at per monitor V2 awareness level, but as far as I can determine it makes no difference in any mode on Windows 11 as the NC areas are always scaled, regardless of mode and whether this is called or not. It also doesn't have any effect on the bug where at certain DPIs in per-monitor mode menu bars leave small black areas around some edges (i.e. don't paint the entire background)."
-
-	UserLibrary dpiAwareness isSystemAware
-			ifTrue: [User32 enableNonClientDpiScaling: handle].
+	User32 enableNonClientDpiScalingIfNecessary: handle.
 	^nil!
 
 wmSetCursor: message wParam: wParam lParam: lParam

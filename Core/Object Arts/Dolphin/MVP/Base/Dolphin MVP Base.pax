@@ -195,6 +195,7 @@ package setMethodNames: #(
 	#(#{OS.UserLibrary} #drawMenuBar:)
 	#(#{OS.UserLibrary} #emptyClipboard)
 	#(#{OS.UserLibrary} #enableNonClientDpiScaling:)
+	#(#{OS.UserLibrary} #enableNonClientDpiScalingIfNecessary:)
 	#(#{OS.UserLibrary} #enableScrollBar:wSBFlags:wArrows:)
 	#(#{OS.UserLibrary} #endDeferWindowPos:)
 	#(#{OS.UserLibrary} #endPaint:lpPaint:)
@@ -269,6 +270,7 @@ package setMethodNames: #(
 	#(#{OS.UserLibrary} #isForegroundProcess:)
 	#(#{OS.UserLibrary} #isIconic:)
 	#(#{OS.UserLibrary} #isProcessDPIAware)
+	#(#{OS.UserLibrary} #isProcessSystemDpiAware)
 	#(#{OS.UserLibrary} #isValidDpiAwarenessContext:)
 	#(#{OS.UserLibrary} #isWindowUnicode:)
 	#(#{OS.UserLibrary} #isZoomed:)
@@ -343,6 +345,7 @@ package setMethodNames: #(
 	#(#{OS.UserLibrary class} #desiredDpiAwareness)
 	#(#{OS.UserLibrary class} #desiredDpiAwareness:)
 	#(#{OS.UserLibrary class} #dpiAwareness)
+	#(#{OS.UserLibrary class} #dpiAwarenessContext)
 	#(#{UI.ResourceIdentifier} #canShow)
 	#(#{UI.ResourceIdentifier} #fixupIcon)
 	#(#{UI.ResourceIdentifier} #icon)
@@ -3019,6 +3022,13 @@ enableNonClientDpiScaling: hwnd
 	<stdcall: bool EnableNonClientDpiScaling handle>
 	^self invalidCall: _failureCode!
 
+enableNonClientDpiScalingIfNecessary: anExternalHandle
+	"Private - Enable system scaling of non-client window decoration."
+
+	"The [documentation](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablenonclientdpiscaling) states that it is not necessary to call EnableNonClientScaling for apps running at per monitor V2 awareness level, but as far as I can determine it makes no difference in _any_ mode on Windows 11 as the NC areas are always scaled, regardless of mode and whether this is called or not. It also doesn't have any effect on the bug where at certain DPIs in per-monitor mode menu bars leave small black areas around some edges (i.e. don't paint the entire background)."
+
+	self isProcessSystemDpiAware ifTrue: [self enableNonClientDpiScaling: anExternalHandle]!
+
 enableScrollBar: hwnd wSBFlags: wSBFlags wArrows: wArrows
 	"Invoke the EnableScrollBar() function of the module wrapped by the receiver.
 	Helpstring: Enables or disables scroll bar arrows (see SB_ and ESB_ constants)
@@ -3645,7 +3655,7 @@ initialize
 		- it cannot be changed once set, but the configured context can be changed for the next image restart (so DpiAwarenessContext may not be the system-wide context)
 		- we may not get what we asked for, e.g. in an application with a manifest defined awareness
 		- the result of GetDpiAwarenessContextForProcess will depend on the thread awareness context at the time it is called (!!)"
-	SystemDpiAwareness := UI.DpiAwareness fromHandle: self getThreadDpiAwarenessContext.
+	DpiAwarenessContext := self getThreadDpiAwarenessContext.
 	^self!
 
 insertMenuItem: hMenu uItem: anInteger fByPosition: aBoolean lpmii: aMENUITEMINFOW
@@ -3742,6 +3752,12 @@ isProcessDPIAware
 
 	<stdcall: bool IsProcessDPIAware>
 	^self invalidCall: _failureCode!
+
+isProcessSystemDpiAware
+	"Answer whether the process default Dpi awareness is the 'system' level, i.e. a common high DPI applied to all monitors regardless of their physical DPI, as opposed to per-monitor high DPI."
+
+	^self areDpiAwarenessContextsEqual: DPI_AWARENESS_CONTEXT_SYSTEM_AWARE
+		dpiContextB: DpiAwarenessContext!
 
 isValidDpiAwarenessContext: value
 	"Invoke the IsValidDpiAwarenessContext() function of the module wrapped by the receiver.
@@ -4531,6 +4547,7 @@ drawFrameControl:lprc:uType:uState:!**auto generated**!public!win32 functions-pa
 drawMenuBar:!public!win32 functions-menu! !
 emptyClipboard!public!win32 functions-clipboard! !
 enableNonClientDpiScaling:!**auto generated**!public!win32 functions-high DPI! !
+enableNonClientDpiScalingIfNecessary:!high DPI!public! !
 enableScrollBar:wSBFlags:wArrows:!**auto generated**!public!win32 functions-scroll bar! !
 endDeferWindowPos:!**auto generated**!public! !
 endPaint:lpPaint:!public!win32 functions-painting and drawing! !
@@ -4605,6 +4622,7 @@ isDialogMessage:lpMsg:!public!win32 functions-dialog box! !
 isForegroundProcess:!enquiries!public! !
 isIconic:!public!win32 functions-icon! !
 isProcessDPIAware!**auto generated**!public!win32 functions-high DPI! !
+isProcessSystemDpiAware!high DPI!public!testing! !
 isValidDpiAwarenessContext:!**auto generated**!public!win32 functions-high DPI! !
 isWindowUnicode:!public!win32 functions-window!win32 functions-window procedure! !
 isZoomed:!public!win32 functions-window! !
@@ -4695,12 +4713,18 @@ desiredDpiAwareness: aDpiAwareness
 dpiAwareness
 	"Answer the <DpiAwareness> context established for this Dolphin process. Note that this cannot be changed in a running session, only on restart."
 
-	^SystemDpiAwareness! !
+	^UI.DpiAwareness fromHandle: DpiAwarenessContext!
+
+dpiAwarenessContext
+	"Answer the <integer> dpi awareness context handle established for this Dolphin process. Note that this cannot be changed in a running session, only on restart."
+
+	^DpiAwarenessContext! !
 
 !OS.UserLibrary class categoriesForMethods!
 desiredDpiAwareness!accessing!high DPI!public! !
 desiredDpiAwareness:!accessing!high DPI!public! !
 dpiAwareness!accessing!high DPI!public! !
+dpiAwarenessContext!accessing!public! !
 !
 
 !UI.ResourceIdentifier methodsFor!

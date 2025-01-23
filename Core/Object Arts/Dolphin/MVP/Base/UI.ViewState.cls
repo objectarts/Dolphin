@@ -39,7 +39,7 @@ recordStateOf: aView forRecreate: aBoolean
 	view := aView.
 	aBoolean ifTrue: [view setStateRestoring].
 	dpiAwareness := aView dpiAwareness.
-	UserLibrary dpiAwareness = dpiAwareness
+	(dpiAwareness isEqualToDpiAwarenessContext: UserLibrary dpiAwarenessContext)
 		ifTrue: [state := aView state]
 		ifFalse: 
 			["This view has a custom DPI awareness that differs from the system awareness, so we want to restore it with the correct awareness on recreation.
