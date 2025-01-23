@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MimallocDir Condition="'$(MimallocDir)'==''">$(SolutionDir)mimalloc\</MimallocDir>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(IntDir);$(SolutionDir)</AdditionalIncludeDirectories>
@@ -9,7 +12,7 @@
       <GenerateStublessProxies>true</GenerateStublessProxies>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)mimalloc\include;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MimallocDir)include;$(SolutionDir);$(ProjectDir)..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>

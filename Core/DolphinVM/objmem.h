@@ -141,10 +141,6 @@ public:
 
 	#if defined(_DEBUG) && !defined(BOOT)
 	
-	// OTEs are 16-bytes in size and aligned, so bottom 4 bits are 0. LSB is SmallInteger flag, 
-	// so use 2nd bit as debug marker bit for free OTEs
-	#define FREEFLAG 0x00000002
-
 	static OTE* NextFree(const OTE* ote)
 	{
 		HARDASSERT(ote->isFree());
@@ -322,6 +318,10 @@ public:
 		}
 
 #ifdef _DEBUG
+		// OTEs are 16-bytes in size and aligned, so bottom 4 bits are 0. LSB is SmallInteger flag, 
+		// so use 2nd bit as debug marker bit for free OTEs
+		#define FREEFLAG 0x00000002
+
 		static OTE* NextFree(const OTE* ote)
 		{
 			HARDASSERT(ote->isFree());
@@ -417,7 +417,7 @@ private:
 	static void* ObjMemCall reallocChunk(void* pChunk, size_t newChunkSize);
 
 #ifdef _DEBUG
-	static size_t chunkSize(void* pChunk);
+	static size_t __cdecl chunkSize(void* pChunk);
 #endif
 
 	static POBJECT allocObject(size_t objectSize, OTE*& ote);

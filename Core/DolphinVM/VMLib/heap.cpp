@@ -187,7 +187,7 @@ void ObjectMemory::UninitializeHeap()
 
 #ifdef _DEBUG
 
-size_t ObjectMemory::chunkSize(void* pChunk)
+size_t __cdecl ObjectMemory::chunkSize(void* pChunk)
 {
 #ifdef WIN32_HEAP
 	return ::HeapSize(m_hHeap, 0, pChunk);

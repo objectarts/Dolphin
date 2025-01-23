@@ -64,10 +64,6 @@
 	#endif
 #endif
 
-#if defined(TO_GO) && defined(CANSAVEIMAGE)
-	#error("Project config is incompatible (To Go stubs cannot save images)")
-#endif
-
 // Enable templated overloads for secure version of old-style CRT functions that manipulate buffers but take no size arguments
 
 #undef _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES
