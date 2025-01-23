@@ -54,14 +54,14 @@ determineName
 	level := self awarenessLevel.
 	level == DPI_AWARENESS_UNAWARE
 		ifTrue: 
-			[^(User32 areDpiAwarenessContextsEqual: handle
-				dpiContextB: DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED) ifTrue: [#gdiScaled] ifFalse: [#unaware]].
+			[^(self isEqualToDpiAwarenessContext: DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED)
+				ifTrue: [#gdiScaled]
+				ifFalse: [#unaware]].
 	level == DPI_AWARENESS_PER_MONITOR_AWARE
 		ifTrue: 
-			[^(User32 areDpiAwarenessContextsEqual: handle
-				dpiContextB: DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2)
-					ifTrue: [#perMonitor]
-					ifFalse: [#perMonitorV1]].
+			[^(self isEqualToDpiAwarenessContext: DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2)
+				ifTrue: [#perMonitor]
+				ifFalse: [#perMonitorV1]].
 	^AwarenessLevelNames at: level + 2!
 
 dpi
@@ -90,6 +90,9 @@ isCurrent
 	"Answer whether the receiver is the live DPI awareness context."
 
 	^User32 areDpiAwarenessContextsEqual: User32 getThreadDpiAwarenessContext dpiContextB: handle!
+
+isEqualToDpiAwarenessContext: anInteger
+	^User32 areDpiAwarenessContextsEqual: handle dpiContextB: anInteger!
 
 isPerMonitor
 	^self awarenessLevel == DPI_AWARENESS_PER_MONITOR_AWARE!
@@ -132,6 +135,7 @@ handle:!accessing!private! !
 hash!comparing!public! !
 inContextDo:!operations!public! !
 isCurrent!public!testing! !
+isEqualToDpiAwarenessContext:!comparing!public! !
 isPerMonitor!public!testing! !
 isSystemAware!public!testing! !
 isUnaware!public!testing! !

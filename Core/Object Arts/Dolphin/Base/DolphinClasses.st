@@ -4149,7 +4149,7 @@ External.WindowsSystemLibrary
 External.WindowsSystemLibrary
 	subclass: #'OS.UserLibrary'
 	instanceVariableNames: ''
-	classVariableNames: 'DesiredDpiAwarenessContext SystemDpiAwareness'
+	classVariableNames: 'DesiredDpiAwarenessContext DpiAwarenessContext'
 	imports: #(#{OS.MessageBoxConstants private})
 	classInstanceVariableNames: ''
 	classConstants: {}!

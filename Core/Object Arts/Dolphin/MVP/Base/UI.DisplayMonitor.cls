@@ -59,7 +59,11 @@ adjustWindowRect: aRectangle
 
 cacheInfo
 	| monitorInfo |
-	monitorInfo := self infoWithDpiAwareness: UserLibrary dpiAwareness.
+	monitorInfo := MONITORINFOEXW newBuffer.
+	(UserLibrary dpiAwareness inContextDo: [
+		dpi := self effectiveDpi.
+		UserLibrary default getMonitorInfo: handle lpmi: monitorInfo])
+		ifFalse: [Win32Error signal].
 	workArea := monitorInfo workArea.
 	rectangle := monitorInfo rectangle.
 	deviceName := monitorInfo szDevice.
@@ -119,7 +123,8 @@ devices
 dpi
 	"Answer the logical DPI for this monitor. Note that this may not be the same as the physical DPI, depending on the DPI awareness of the application and the OS magnification setting. When DPI unaware, this is always 96. When system DPI aware it is the system-wide DPI, even if different than this monitor's DPI. When per-monitor DPI aware, it is the effective DPI of the monitor (i.e. the monitors's DPI at the configured magnification)."
 
-	^dpi ifNil: [dpi := UserLibrary dpiAwareness inContextDo: [self effectiveDpi]]!
+	dpi ifNil: [self cacheInfo].
+	^dpi!
 
 effectiveDpi
 	"Answer the logical DPI of this monitor as measured in the current thread DPI awareness context. This may be different to #dpi, which is the DPI at the process wide (default) context."
