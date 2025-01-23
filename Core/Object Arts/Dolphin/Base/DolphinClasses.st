@@ -4013,14 +4013,6 @@ External.PermanentLibrary
 	classConstants: { 'LongPathPrefix' -> '\\?\' }!
 
 External.PermanentLibrary
-	subclass: #'OS.UserLibrary'
-	instanceVariableNames: ''
-	classVariableNames: 'DesiredDpiAwarenessContext SystemDpiAwareness'
-	imports: #(#{OS.MessageBoxConstants private})
-	classInstanceVariableNames: ''
-	classConstants: {}!
-
-External.PermanentLibrary
 	subclass: #'Kernel.VMLibrary'
 	instanceVariableNames: 'wndProc dlgProc genericCallback vtable specialSelectorStart'
 	classVariableNames: 'Registry RegistryKeys'
@@ -4151,6 +4143,14 @@ External.WindowsSystemLibrary
 	instanceVariableNames: ''
 	classVariableNames: ''
 	imports: #()
+	classInstanceVariableNames: ''
+	classConstants: {}!
+
+External.WindowsSystemLibrary
+	subclass: #'OS.UserLibrary'
+	instanceVariableNames: ''
+	classVariableNames: 'DesiredDpiAwarenessContext SystemDpiAwareness'
+	imports: #(#{OS.MessageBoxConstants private})
 	classInstanceVariableNames: ''
 	classConstants: {}!
 

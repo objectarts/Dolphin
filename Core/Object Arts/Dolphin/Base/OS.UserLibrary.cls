@@ -1,6 +1,6 @@
 ﻿"Filed out from Dolphin Smalltalk"!
 
-External.PermanentLibrary
+External.WindowsSystemLibrary
 	subclass: #'OS.UserLibrary'
 	instanceVariableNames: ''
 	classVariableNames: 'DesiredDpiAwarenessContext SystemDpiAwareness'

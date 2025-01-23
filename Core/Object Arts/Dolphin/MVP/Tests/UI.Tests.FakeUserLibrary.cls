@@ -93,18 +93,11 @@ clear
 
 	"Nothing to do"!
 
-openDefault
-	"Do nothing - we don't want to overwrite the real UserLibrary on startup"!
-
-uninitialize
-	"Private - Uninitialize the receiver as it is about to be removed from the system."
-
-	"Override so that we don't close the default user library and undeclare User32"
-! !
+sharedVariableName
+	^nil! !
 
 !UI.Tests.FakeUserLibrary class categoriesForMethods!
 clear!initializing!private! !
-openDefault!instance creation!private!realizing/unrealizing! !
-uninitialize!class hierarchy-removing!private! !
+sharedVariableName!constants!private! !
 !
 
