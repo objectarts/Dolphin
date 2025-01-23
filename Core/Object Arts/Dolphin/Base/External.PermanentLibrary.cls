@@ -68,15 +68,6 @@ initializeSubclasses
 	The permanent libraries have already been initialized."
 !
 
-onStartup
-	"Private - Perform system startup processing for all subclasses.
-	Implementation Note: The permanent libraries must be cleared down
-	before they are re-opened, otherwise invalid function addresses
-	may get called."
-
-	KernelLibrary clear.	"This has to be opened first"
-	self allSubclassesDo: [:s | s == KernelLibrary ifFalse: [s clear]]!
-
 onStartup2
 	"Private - Perform system startup processing for all subclasses. PermanentLibrary subclasses have a default instance that is always opened on startup."
 
@@ -92,7 +83,6 @@ closeDefault!private!realizing/unrealizing! !
 default!accessing!public! !
 default:!accessing!public! !
 initializeSubclasses!initializing!private! !
-onStartup!event handling!private! !
 onStartup2!event handling!private! !
 !
 
