@@ -930,19 +930,21 @@ browseReferencesToVariable: anAssociation
 	self browseReferencesToLiteral: anAssociation in: self browserEnvironment!
 
 browserEnvFromDom: anIXMLDOMDocument
-	| manifest classes env exeName time model deletedSharedVars retainedSharedVars |
+	| manifest classes env exeName time model deletedSharedVars retainedSharedVars unbound |
 	manifest := anIXMLDOMDocument selectSingleNode: './/Manifest'.
 	classes := manifest selectNodes: 'Classes/Class'.
 	env := SelectorEnvironment new.
 	exeName := File splitFilenameFrom: (anIXMLDOMDocument selectSingleNode: './/Target') text.
 	time := (anIXMLDOMDocument selectSingleNode: './/TimeStamp') text.
 	env label: ('<1s> (<2s>)' expandMacrosWith: exeName with: time).
+	unbound := Set new.
 	classes do: 
 			[:each |
 			| methods className classMethods |
 			className := each getAttribute: 'name'.
 			className asQualifiedReference ifDefined: 
 					[:class |
+					(each getAttribute: 'unbound') = 'true' ifTrue: [unbound add: class].
 					methods := each selectNodes: 'Methods/Method'.
 					env addClass: class selectors: (methods collect: [:eachMethod | eachMethod text asSymbol]).
 					classMethods := each selectNodes: 'ClassMethods/Method'.
@@ -962,6 +964,7 @@ browserEnvFromDom: anIXMLDOMDocument
 			toDelete isEmpty ifFalse: [deletedSharedVars at: each put: toDelete]].
 	deletedSharedVars
 		keysAndValuesDo: [:eachClass :deadVars | deadVars do: [:each | eachClass removeBindingFor: each key]].
+	unbound do: [:each | (each environment classInModel: model) removeBindingFor: each name].
 	^model!
 
 browserEnvironment
@@ -3952,7 +3955,9 @@ sessionManager
 
 	^SessionManager current!
 
-setCustomDrawAttributes: anNMCUSTOMDRAW forClass: aClass
+setClassCustomDrawAttributes: anNMCUSTOMDRAW
+	| aClass |
+	aClass := anNMCUSTOMDRAW subItem.
 	aClass isDeprecated ifTrue: [anNMCUSTOMDRAW font isStruckThrough: true].
 	aClass isVisiblyAbstract ifTrue: [anNMCUSTOMDRAW font isItalic: true]!
 
@@ -4390,7 +4395,7 @@ browseReferencesToInstVar:inHierarchyOf:within:!browsing!private! !
 browseReferencesToInstVars:inHierarchyOf:within:!browsing!private! !
 browseReferencesToLiteral:in:!browsing!public! !
 browseReferencesToVariable:!browsing!public! !
-browserEnvFromDom:!helpers!private! !
+browserEnvFromDom:!public! !
 browserEnvironment!accessing!public! !
 browserEnvironmentForClasses:!browsing!public! !
 browseResourceIdentifier:!operations!public! !
@@ -4687,7 +4692,7 @@ saveImage!commands-actions!public! !
 saveImageAs!commands-actions!public! !
 selectMethods:in:withProgress:!private!searching! !
 sessionManager!accessing!private! !
-setCustomDrawAttributes:forClass:!helpers!private! !
+setClassCustomDrawAttributes:!helpers!private! !
 showPrerequisitesForPackage:!helpers!public! !
 showShellWithHandle:!private! !
 showTranscript!commands-actions!public! !

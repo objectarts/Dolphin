@@ -25,7 +25,8 @@ createComponents
 customDrawClassTree: anNMTVCUSTOMDRAW
 	"Private - Custom drawing to implement the emphasis in the class hierarchy tree."
 
-	self developmentSystem setCustomDrawAttributes: anNMTVCUSTOMDRAW forClass: anNMTVCUSTOMDRAW item!
+	self developmentSystem setClassCustomDrawAttributes: anNMTVCUSTOMDRAW.
+	self trigger: #classCustomDrawAttributesRequired: with: anNMTVCUSTOMDRAW!
 
 expand: aClass
 	"Expands aClass in the displayed hierarchy"

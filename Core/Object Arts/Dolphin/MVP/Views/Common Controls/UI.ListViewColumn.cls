@@ -235,14 +235,12 @@ infoTipFromRow: item withPrefix: prefixText
 	mode, as otherwise it handles this message itself. This allows for differing behaviour
 	in a view dynamically switchable between modes."
 
-	^getInfoTipBlock isNil 
+	^getInfoTipBlock isNil
 		ifTrue: ['']
-		ifFalse: [ | content |
+		ifFalse: 
+			[| content |
 			content := self contentFromRow: item.
-			(getInfoTipBlock argumentCount > 1
-				ifTrue: [getInfoTipBlock value: content value: prefixText]
-				ifFalse: [getInfoTipBlock value: content]) displayString]
-!
+			(getInfoTipBlock cull: content cull: prefixText) displayString]!
 
 initialize
 	"Private - Initialize the state of the receiever."

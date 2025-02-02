@@ -791,7 +791,7 @@ realClass!public! !
 !Core.Metaclass methodsFor!
 
 classInModel: aRBModel
-	^(instanceClass classInModel: aRBModel) metaclass!
+	^(instanceClass classInModel: aRBModel) ifNotNil: [:modelClass | modelClass metaclass]!
 
 instancesAreClasses
 	^true! !

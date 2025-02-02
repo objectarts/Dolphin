@@ -643,7 +643,7 @@ hierarchyDefinesVariable:!public!testing! !
 !Kernel.CompiledMethod methodsFor!
 
 methodInModel: aRBModel
-	^(methodClass classInModel: aRBModel) methodFor: selector! !
+	^(methodClass classInModel: aRBModel) ifNotNil: [:modelClass | modelClass methodFor: selector]! !
 
 !Kernel.CompiledMethod categoriesForMethods!
 methodInModel:!converting!public! !

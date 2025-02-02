@@ -252,6 +252,9 @@ stateMask: anInteger set: aBoolean
 	bytes uint32AtOffset: _OffsetOf_uItemState
 		put: (aBoolean ifTrue: [itemState bitOr: anInteger] ifFalse: [itemState bitAnd: anInteger bitInvert])!
 
+subItem
+	^self item!
+
 uItemState
 	"Answer the <Integer> value of the receiver's 'uItemState' field."
 
@@ -314,6 +317,7 @@ lParam!**compiled accessors**!public! !
 metrics!accessing!public! !
 rc!**compiled accessors**!public! !
 stateMask:set:!private!states-changing! !
+subItem!accessing!public! !
 uItemState!**compiled accessors**!public! !
 uItemState:!**compiled accessors**!public! !
 view!accessing!public! !

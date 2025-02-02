@@ -101,13 +101,12 @@ createSchematicWiring
 		to: self!
 
 customDrawClassList: anNMLVCUSTOMDRAW
-	"Private - Custom drawing to implement the emphasis in the class list. See #customDrawClassTree: for details, although note that the list cannot contain 'included but not defined' classes."
+	"Private - Custom drawing to implement the emphasis in the class list. See #customDrawClassTree: for details, although note that the list should not contain 'included but not defined' classes."
 
-	| class |
-	class := anNMLVCUSTOMDRAW item.
-	(browserEnvironment definesClass: class)
+	(browserEnvironment definesClass: anNMLVCUSTOMDRAW item)
 		ifFalse: [anNMLVCUSTOMDRAW forecolor: ClassBrowserAbstract.LooseMethodColor].
-	self developmentSystem setCustomDrawAttributes: anNMLVCUSTOMDRAW forClass: class!
+	self developmentSystem setClassCustomDrawAttributes: anNMLVCUSTOMDRAW.
+	self trigger: #classCustomDrawAttributesRequired: with: anNMLVCUSTOMDRAW!
 
 customDrawClassTree: anNMTVCUSTOMDRAW
 	"Private - Custom drawing to implement the emphasis in a class or namespace hierarchy tree. 
@@ -126,7 +125,8 @@ customDrawClassTree: anNMTVCUSTOMDRAW
 		ifFalse: 
 			[anNMTVCUSTOMDRAW
 				forecolor: (anNMTVCUSTOMDRAW forecolor fadedBy: ClassBrowserAbstract.GrayedMethodFadeFactor)].
-	self developmentSystem setCustomDrawAttributes: anNMTVCUSTOMDRAW forClass: class!
+	self developmentSystem setClassCustomDrawAttributes: anNMTVCUSTOMDRAW.
+	self trigger: #classCustomDrawAttributesRequired: with: anNMTVCUSTOMDRAW!
 
 deleteItCommand
 	"Private - Answer the command that the context-sensitive 'Browse-It' command would be linked

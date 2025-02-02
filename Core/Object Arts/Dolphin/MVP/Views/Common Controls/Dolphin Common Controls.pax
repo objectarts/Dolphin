@@ -910,7 +910,7 @@ OS.NMHDR
 
 OS.NMCUSTOMDRAW
 	subclass: #'OS.NMLVCUSTOMDRAW'
-	instanceVariableNames: 'column'
+	instanceVariableNames: 'column subItem'
 	classVariableNames: ''
 	imports: #()
 	classInstanceVariableNames: ''

@@ -1697,16 +1697,16 @@ packages: aCollection
 parseContext
 	"Answer the {Class. Namespace} scope in who's context methods should be compiled."
 
-	^self method
-		ifNotNil: [:m | (model modelMethodFor: m) parseContext]
-		ifNil: 
-			[self actualClass
-				ifNil: [model defaultParseContext]
+	self method
+		ifNotNil: [:m | (model modelMethodFor: m) ifNotNil: [:modelMethod | ^modelMethod parseContext]].
+	self actualClass
+		ifNotNil: 
+			[:class |
+			(model modelClassFor: class)
 				ifNotNil: 
-					[:class |
-					| modelClass |
-					modelClass := model modelClassFor: class.
-					ParseContext methodClass: modelClass environment: (self namespaceForNewMethodOf: modelClass)]]!
+					[:modelClass |
+					^ParseContext methodClass: modelClass environment: (self namespaceForNewMethodOf: modelClass)]].
+	^model defaultParseContext!
 
 parseTree
 	^methodBrowserPresenter parseTree!

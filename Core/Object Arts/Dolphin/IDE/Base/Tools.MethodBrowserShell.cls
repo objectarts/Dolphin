@@ -117,9 +117,9 @@ onViewOpened
 		ifNotNil: [:item | item model: browserPresenter namespaceModel]!
 
 parseContext
-	^self selectedMethod
-		ifNil: [model defaultParseContext]
-		ifNotNil: [:method | (model modelMethodFor: method) parseContext]!
+	self selectedMethod
+		ifNotNil: [:method | (model modelMethodFor: method) ifNotNil: [:modelMethod | ^modelMethod parseContext]].
+	^model defaultParseContext!
 
 recompileDiffs
 	<commandQuery: #hasMethodSelected>

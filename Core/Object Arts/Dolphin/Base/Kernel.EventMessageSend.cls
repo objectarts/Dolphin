@@ -18,11 +18,21 @@ When evaluate with extra arguments, an EventMessageSend merges its own argument 
 
 !Kernel.EventMessageSend methodsFor!
 
+argumentCount
+	"Answer the <integer> number of arguments in the receiver's message."
+
+	^expectedArgCount!
+
 asMessageSend
 	^MessageSend
 		receiver: self receiver
 		selector: selector
-		arguments: (Array withAll: self arguments)!
+		arguments: ((Array new: expectedArgCount)
+				replaceFrom: 1
+					to: (expectedArgCount min: args basicSize)
+					with: args
+					startingAt: 1;
+				yourself)!
 
 forwardTo: anObject withArguments: triggerArguments
 	"Private - Send the receiver Message to the <Object>, anObject, with the <Array> of arguments, anArray.	
@@ -85,7 +95,8 @@ value
 				withArguments: (expectedArgCount == args size ifTrue: [args] ifFalse: [self mergeArguments: #()])]! !
 
 !Kernel.EventMessageSend categoriesForMethods!
-asMessageSend!public! !
+argumentCount!accessing!public! !
+asMessageSend!converting!public! !
 forwardTo:withArguments:!evaluating!private! !
 mergeArguments:!evaluating!private! !
 postCopy!copying!public! !

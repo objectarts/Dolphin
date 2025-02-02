@@ -486,7 +486,7 @@ createSchematicWiring
 customDrawClassList: anNMLVCUSTOMDRAW
 	"Private - Custom drawing to implement the emphasis in the classes list tree."
 
-	self developmentSystem setCustomDrawAttributes: anNMLVCUSTOMDRAW forClass: anNMLVCUSTOMDRAW subItem!
+	self developmentSystem setClassCustomDrawAttributes: anNMLVCUSTOMDRAW!
 
 defaultHelpId
 	^10807!

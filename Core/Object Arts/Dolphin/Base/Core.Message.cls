@@ -30,8 +30,7 @@ argument
 	^args single!
 
 argumentCount
-	"Answer the <integer> number of arguments in the receiver's
-	message."
+	"Answer the <integer> number of arguments in the receiver's message."
 
 	^args size!
 
@@ -52,6 +51,12 @@ asSymbol
 	"Answer the receiver's <selector>."
 
 	^selector!
+
+cull: anObject 
+	^self value: anObject!
+
+cull: arg1 cull: arg2 
+	^self argumentCount == 0 ifTrue: [self cull: arg1] ifFalse: [self value: arg1 value: arg2]!
 
 forwardTo: anObject
 	"Send the receiver Message to anObject for evaluation, 
@@ -146,22 +151,29 @@ selector: aSymbol arguments: argArray
 
 value: anObject
 	"Answer the result of sending the receiver to the object, anObject.
-	Implementation Note: By implementing this selector from the monadic
-	valuable protocol, we enable the substitution of Messages for a
-	large number of parameterization cases where blocks would otherwise
-	be required."
+	Implementation Note: By implementing this selector from the monadic valuable protocol, we enable the substitution of Messages for a large number of parameterization cases where blocks would otherwise be required."
 
 	^anObject perform: selector withArguments: args!
 
 value: receiver value: argument
-	"Answer the result of sending the receiving message to the object, receiver,
-	with the argument, argument.
-	Implementation Note: By implementing this selector from the dyadic
-	valuable protocol, we enable the substitution of Messages for a
-	further set of parameterization cases where blocks would otherwise
-	be required."
+	"Answer the result of sending the receiving message to the object, receiver, with the argument, argument.
+	Implementation Note: By implementing this selector from the dyadic valuable protocol, we enable the substitution of Messages for a further set of parameterization cases where blocks would otherwise be required."
 
 	^receiver perform: selector with: argument!
+
+value: receiver value: arg1 value: arg2
+	"Answer the result of sending the receiving message to the object, receiver, with the arguments, arg1, and arg2."
+
+	^receiver perform: selector with: arg1 with: arg2!
+
+value: receiver value: arg1 value: arg2 value: arg3
+	"Answer the result of sending the receiving message to the object, receiver, with the arguments, arg1, arg2 and arg3."
+
+	^receiver
+		perform: selector
+		with: arg1
+		with: arg2
+		with: arg3!
 
 valueWithArguments: argArray
 	"Evaluate the receiver with an <Array> of arguments in argArray"
@@ -175,6 +187,8 @@ argumentCount!accessing!public! !
 arguments!accessing!public! !
 arguments:!accessing!public! !
 asSymbol!converting!public! !
+cull:!evaluating!public! !
+cull:cull:!evaluating!public! !
 forwardTo:!operations!public! !
 forwardTo:with:!operations!private! !
 forwardTo:withArguments:!operations!private! !
@@ -188,6 +202,8 @@ selector:!accessing!public! !
 selector:arguments:!initializing!private! !
 value:!evaluating!public! !
 value:value:!evaluating!public! !
+value:value:value:!evaluating!public! !
+value:value:value:value:!evaluating!public! !
 valueWithArguments:!evaluating!public! !
 !
 

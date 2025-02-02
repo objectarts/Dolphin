@@ -51,10 +51,10 @@ includesSelector: aSelector in: aClass
 selectorsForClass: aClass do: aBlock 
 	"Override for improved performance."
 
-	aClass selectorsAndMethodsDo: 
-			[:eachSelector :eachMethod | 
-			((environment includesSelector: eachSelector in: aClass) and: [filter value: eachMethod]) 
-				ifTrue: [aBlock value: eachSelector]]!
+	aClass methodsDo: 
+			[:each | 
+			((environment includesSelector: each selector in: aClass) and: [filter value: each]) 
+				ifTrue: [aBlock value: each selector]]!
 
 snapshot
 	"Answer a static snapshot of this dynamic method environment."

@@ -26,23 +26,23 @@ Athough Message Sends are complete in themselves, they also respond to the valua
 
 	^super = aMessageSend and: [self receiver == aMessageSend receiver]!
 
-cull: arg 
-	^selector numArgs = 0 ifTrue: [self value] ifFalse: [self value: arg]!
+cull: arg
+	^self argumentCount == 0 ifTrue: [self value] ifFalse: [self value: arg]!
 
 cull: arg1 cull: arg2 
-	^selector numArgs < 2 ifTrue: [self cull: arg1] ifFalse: [self value: arg1 value: arg2]!
+	^self argumentCount < 2 ifTrue: [self cull: arg1] ifFalse: [self value: arg1 value: arg2]!
 
-cull: arg1 cull: arg2 cull: arg3 
-	^selector numArgs < 3 
+cull: arg1 cull: arg2 cull: arg3
+	^self argumentCount < 3
 		ifTrue: [self cull: arg1 cull: arg2]
 		ifFalse: 
-			[self 
+			[self
 				value: arg1
 				value: arg2
 				value: arg3]!
 
 cull: arg1 cull: arg2 cull: arg3 cull: arg4 
-	^selector numArgs < 4 
+	^self argumentCount < 4 
 		ifTrue: 
 			[self 
 				cull: arg1

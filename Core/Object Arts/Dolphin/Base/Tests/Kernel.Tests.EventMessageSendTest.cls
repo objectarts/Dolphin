@@ -16,6 +16,23 @@ Kernel.Tests.EventMessageSendTest comment: ''!
 
 !Kernel.Tests.EventMessageSendTest methodsFor!
 
+testAsMessageSend
+	| subject |
+	subject := EventMessageSend receiver: 1 selector: #yourself.
+	self assert: subject asMessageSend equals: (MessageSend receiver: 1 selector: #yourself).
+	subject := EventMessageSend receiver: Array selector: #with:.
+	self assert: subject asMessageSend
+		equals: (MessageSend
+				receiver: Array
+				selector: #with:
+				argument: nil).
+	subject := EventMessageSend receiver: Array selector: #with:with:.
+	self assert: subject asMessageSend
+		equals: (MessageSend
+				receiver: Array
+				selector: #with:with:
+				arguments: #(nil nil))!
+
 testNoArguments
 	| subject |
 	subject := EventMessageSend receiver: 1 selector: #yourself.
@@ -24,7 +41,11 @@ testNoArguments
 	self assert: (subject value: 2) equals: 1.
 	self assert: (subject valueWithArguments: #(2)) equals: 1.
 	self assert: (subject value: 2 value: 3) equals: 1.
-	self assert: (subject valueWithArguments: #(2 3)) equals: 1!
+	self assert: (subject valueWithArguments: #(2 3)) equals: 1.
+	self assert: (subject cull: 2) equals: 1.
+	self assert: (subject cull: 2 cull: 3) equals: 1.
+	self assert: (subject cull: 2 cull: 3 cull: 4) equals: 1.
+!
 
 testOneArgument
 	| subject |
@@ -38,7 +59,10 @@ testOneArgument
 	self assert: (subject value: 2) equals: #(2).
 	self assert: (subject valueWithArguments: #(2)) equals: #(2).
 	self assert: (subject value: 2 value: 3) equals: #(2).
-	self assert: (subject valueWithArguments: #(2 3)) equals: #(2)!
+	self assert: (subject valueWithArguments: #(2 3)) equals: #(2).
+	self assert: (subject cull: 2) equals: #(2).
+	self assert: (subject cull: 2 cull: 3) equals: #(2).
+	self assert: (subject cull: 2 cull: 3 cull: 4) equals: #(2).!
 
 testOneArgumentWithGC
 	| subject |
@@ -67,6 +91,9 @@ testTwoArguments
 	self assert: (subject valueWithArguments: #(3)) equals: #(3 2).
 	self assert: (subject valueWithArguments: #(3 4)) equals: #(3 4).
 	self assert: (subject valueWithArguments: #(3 4 5)) equals: #(3 4).
+	self assert: (subject cull: 4) equals: #(4 2).
+	self assert: (subject cull: 4 cull: 5) equals: #(4 5).
+	self assert: (subject cull: 4 cull: 5 cull: 6) equals: #(4 5).
 	subject := EventMessageSend
 				receiver: Array
 				selector: #with:with:
@@ -83,6 +110,9 @@ testTwoArguments
 				value: 4)
 		equals: #(2 3).
 	self assert: (subject valueWithArguments: #(2 3 4)) equals: #(2 3).
+	self assert: (subject cull: 4) equals: #(4 nil).
+	self assert: (subject cull: 4 cull: 5) equals: #(4 5).
+	self assert: (subject cull: 4 cull: 5 cull: 6) equals: #(4 5).
 	subject := EventMessageSend
 				receiver: Array
 				selector: #with:with:
@@ -98,9 +128,13 @@ testTwoArguments
 				value: 3
 				value: 4)
 		equals: #(2 3).
-	self assert: (subject valueWithArguments: #(2 3 4)) equals: #(2 3)! !
+	self assert: (subject valueWithArguments: #(2 3 4)) equals: #(2 3).
+	self assert: (subject cull: 2) equals: #(2 nil).
+	self assert: (subject cull: 2 cull: 3) equals: #(2 3).
+	self assert: (subject cull: 2 cull: 3 cull: 4) equals: #(2 3).! !
 
 !Kernel.Tests.EventMessageSendTest categoriesForMethods!
+testAsMessageSend!public!testing! !
 testNoArguments!public!testing! !
 testOneArgument!public!testing! !
 testOneArgumentWithGC!public!testing! !

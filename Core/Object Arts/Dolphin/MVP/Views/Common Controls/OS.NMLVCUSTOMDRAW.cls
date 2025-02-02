@@ -2,7 +2,7 @@
 
 OS.NMCUSTOMDRAW
 	subclass: #'OS.NMLVCUSTOMDRAW'
-	instanceVariableNames: 'column'
+	instanceVariableNames: 'column subItem'
 	classVariableNames: ''
 	imports: #()
 	classInstanceVariableNames: ''
@@ -83,6 +83,12 @@ forecolor: aColor
 
 	self clrText: aColor!
 
+getSubItem
+	| row |
+	row := self item.
+	self column ifNotNil: [:col | col getContentsBlock ifNotNil: [:getblock | ^getblock value: row]].
+	^row!
+
 iSubItem
 	"Answer the <Integer> value of the receiver's 'iSubItem' field."
 
@@ -99,10 +105,9 @@ reset
 	self forecolor: self view forecolor ?? Graphics.Color.WindowText!
 
 subItem
-	| row |
-	row := self item.
-	self column ifNotNil: [:col | col getContentsBlock ifNotNil: [:getblock | ^getblock value: row]].
-	^row! !
+	"Answer the object that is being displayed in the list view column associated with this custom draw attributes request."
+
+	^subItem ifNil: [subItem := self getSubItem]! !
 
 !OS.NMLVCUSTOMDRAW categoriesForMethods!
 applyFont!operations!private! !
@@ -116,6 +121,7 @@ column!accessing!public! !
 column:!accessing!private! !
 forecolor!accessing!public! !
 forecolor:!accessing!public! !
+getSubItem!helpers!private! !
 iSubItem!**compiled accessors**!public! !
 itemHandle!accessing!private! !
 reset!public! !

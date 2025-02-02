@@ -445,8 +445,8 @@ createSchematicWiring
 customDrawMethodClass: anNMLVCUSTOMDRAW
 	"Private - Custom drawing to implement the emphasis in a method browser's class column."
 
-	self developmentSystem setCustomDrawAttributes: anNMLVCUSTOMDRAW
-		forClass: anNMLVCUSTOMDRAW item methodClass!
+	self developmentSystem setClassCustomDrawAttributes: anNMLVCUSTOMDRAW.
+	self trigger: #classCustomDrawAttributesRequired: with: anNMLVCUSTOMDRAW!
 
 customDrawSelector: anNMLVCUSTOMDRAW
 	"Private - Custom drawing to implement the emphasis in a method browser's selector column."

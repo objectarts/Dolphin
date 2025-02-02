@@ -58,6 +58,13 @@ createComponents
 	super createComponents.
 	classesPresenter := self add: ClassListSelector new name: 'classes'!
 
+createSchematicWiring
+	super createSchematicWiring.
+	classesPresenter
+		when: #classCustomDrawAttributesRequired:
+		send: #onClassCustomDrawAttributesRequired:
+		to: self!
+
 defaultHelpId
 	^10895!
 
@@ -68,6 +75,15 @@ isMethodVisible: aCompiledMethod
 model: aSystemModel
 	super model: aSystemModel.
 	self browserEnvironment: aSystemModel browserEnvironment!
+
+onClassCustomDrawAttributesRequired: anNMCUSTOMDRAW
+	"Private - Reset the forecolor, as otherwise all classes will be drawn in the 'loose method' colour, which indicates that the class is included but not fully defined. Given that the purpose of the environment browser is to show a filtered view of full set of classes and their methods, it is not terribly useful to show all (or almost all) classes in the highlight colour. Instead we reserve the highlight colour for those classes that are in the hierarchy, but which are not installed in their namespace (i.e. unbound classes). These are also underlined to make them easier to identify."
+
+	anNMCUSTOMDRAW forecolor: anNMCUSTOMDRAW view forecolor ?? Color.WindowText.
+	(anNMCUSTOMDRAW subItem classInModel: model)
+		ifNil: [(anNMCUSTOMDRAW
+				forecolor: LooseMethodColor;
+				font) isUnderlined: true]!
 
 printBasicCaptionOn: aPuttableStream
 	self browserEnvironment displayOn: aPuttableStream!
@@ -110,9 +126,11 @@ browseExecutableManifestFile:!operations!public! !
 browserEnvironment:!initializing!private! !
 browseUnimplemented!commands-actions!public! !
 createComponents!initializing!public! !
+createSchematicWiring!initializing!public! !
 defaultHelpId!constants!public! !
 isMethodVisible:!private!testing! !
 model:!accessing!public! !
+onClassCustomDrawAttributesRequired:!helpers!private! !
 printBasicCaptionOn:!private!updating! !
 printCaptionForClass:on:!private!updating! !
 printCaptionForMethod:on:!private!updating! !
